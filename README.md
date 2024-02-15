@@ -1,5 +1,7 @@
 # Disk_Scanner代码说明
 
+**SOURCE文件夹中存放程序源码**
+
 ## diskoperate
 
 1. diskoperate.h和diskoperate.cpp定义了程序使用的核心类disk；
