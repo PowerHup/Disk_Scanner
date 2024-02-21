@@ -296,7 +296,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
             judgeFile();
             TCHAR* path = pathStack.top();
             path[_tcslen(path) - 1] = 0;
-            fout << "update DIRECTORIES set Ddepth=" << to_string(static_cast<int>(progStack.size())) << ",Dfcount=";  //向SQL文件写入SQL语句
+            fout << "update DIRECTORIES好 set Ddepth=" << to_string(static_cast<int>(progStack.size())) << ",Dfcount=";  //向SQL文件写入SQL语句
             fout << to_string(static_cast<int>(tempNode->subDir->size()));
             fout << " where Dpath=\'" << tc2s(path) << "\';" << endl;
             /*执行出栈操作*/

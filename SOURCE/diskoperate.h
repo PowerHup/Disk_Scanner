@@ -52,7 +52,7 @@ private:
     使用findFileNode()成员函数可以通过几次哈希表查询快速查询到目标文件节点位置
     */
 public:
-    disk(); //默认构造函数
+    disk(); //构造函数
     void scanAndBuild(const TCHAR* rootPath, std::string& sqlFileName);       //扫盘函数,同时构建目录树
     void manageFileInfo(std::string& command);      //管理文件信息
     void manageDirInfo(std::string& command);       //管理目录信息
