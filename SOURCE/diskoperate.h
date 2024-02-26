@@ -54,10 +54,10 @@ private:
         statData();
         statData(const statData& astatData);
         statData& operator=(const statData& astatData);
-        bool compareDir(const statData& astatData);
-        bool compareEarlistFile(const statData& astatData);
-        bool compareLatestFile(const statData& astatData);
-        bool operator==(const statData& astatData);
+        bool compareDir(const statData& astatData) const;
+        bool compareEarlistFile(const statData& astatData) const;
+        bool compareLatestFile(const statData& astatData) const;
+        bool operator==(const statData& astatData) const;
     };
     int dirCount, fileCount, dirDepth, treeDepth;           //存储子目录数，文件数，层数，深度
     TCHAR longestPath[MAX_LENGTH];      //存储最长路径名

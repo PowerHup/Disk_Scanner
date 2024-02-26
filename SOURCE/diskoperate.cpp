@@ -105,7 +105,7 @@ disk::statData& disk::statData::operator=(const statData& astatData)
 }
 
 /*统计结构体比较目录信息函数*/
-bool disk::statData::compareDir(const statData& astatData)
+bool disk::statData::compareDir(const statData& astatData) const
 {
     if (totalFileCount == astatData.totalFileCount && totalFileSize == astatData.totalFileSize)
         return true;
@@ -114,7 +114,7 @@ bool disk::statData::compareDir(const statData& astatData)
 }
 
 /*统计结构体比较最早创建文件信息函数*/
-bool disk::statData::compareEarlistFile(const statData& astatData)
+bool disk::statData::compareEarlistFile(const statData& astatData) const
 {
     if (!_tcscmp(earlistFileName, astatData.earlistFileName) && earlistFileCreationTime == astatData.earlistFileCreationTime && earlistFileSize == astatData.earlistFileSize)
         return true;
@@ -123,7 +123,7 @@ bool disk::statData::compareEarlistFile(const statData& astatData)
 }
 
 /*统计结构体比较最晚创建文件信息函数*/
-bool disk::statData::compareLatestFile(const statData& astatData)
+bool disk::statData::compareLatestFile(const statData& astatData) const
 {
     if (!_tcscmp(latestFileName, astatData.latestFileName) && latestFileCreationTime == astatData.latestFileCreationTime && latestFileSize == astatData.latestFileSize)
         return true;
@@ -132,7 +132,7 @@ bool disk::statData::compareLatestFile(const statData& astatData)
 }
 
 /*统计数据结构体重载相等运算符函数*/
-bool disk::statData::operator==(const statData& astatData)
+bool disk::statData::operator==(const statData& astatData) const
 {
     if (this->compareDir(astatData) && this->compareEarlistFile(astatData) && this->compareLatestFile(astatData))
         return true;
@@ -531,13 +531,12 @@ void disk::manageFileInfo(string& command)
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
     shared_ptr<fileNode> tempNode;  //暂存文件节点
     time_t now;                     //存储当前时间
-    TCHAR* tempPath;
+    TCHAR tempPath[MAX_LENGTH];
     char timeStr[MAX_LENGTH];
 
     strSplit(command, commandPart, ',');
-    tempPath = s2tc(commandPart[0]);
+    s2tc(commandPart[0],tempPath);
     tempNode = findFileNode(tempPath, _FILE);
-    delete[] tempPath;
     now = time(nullptr);
     ctime_s(timeStr, MAX_LENGTH, &now);
 
@@ -617,9 +616,8 @@ void disk::manageFileInfo(string& command)
         string path = strs[0] + "\\";
         for (int i = 1; i < strs.size() - 1; i++)
             path += strs[i] + "\\";
-        tempPath = s2tc(path);
+        s2tc(path, tempPath);
         tempNode = findFileNode(tempPath, _DIR); //查找该文件的上级目录
-        delete[] tempPath;
         if (tempNode == nullptr)
         {
             cerr << "---目标上级目录不存在！" << endl;
@@ -630,9 +628,8 @@ void disk::manageFileInfo(string& command)
         }
         /*创建新文件节点*/
         shared_ptr<fileNode> newNode = make_shared<fileNode>();
-        tempPath = s2tc(commandPart[0]);
+        s2tc(commandPart[0], tempPath);
         _tcscpy_s(newNode->fileName, MAX_LENGTH, tempPath);
-        delete[] tempPath;
         newNode->creationUTCTime = stoll(commandPart[2]);
         newNode->fileSize = stoull(commandPart[3]);
         newNode->fileType = _FILE;
@@ -663,13 +660,12 @@ void disk::manageDirInfo(string& command)
     time_t now;                     //存储当前时间
     string dirName;                 //目录名
     TCHAR tDirName[MAX_LENGTH];     //TCHAR格式目录名
-    TCHAR* tempPath;
+    TCHAR tempPath[MAX_LENGTH];
     char timeStr[MAX_LENGTH];
 
     strSplit(command, commandPart, ',');
-    tempPath = s2tc(commandPart[0]);
+    s2tc(commandPart[0], tempPath);
     tempNode = findFileNode(tempPath, _DIR);    //查询目录节点位置
-    delete[] tempPath;
     now = time(nullptr);
     ctime_s(timeStr, MAX_LENGTH, &now);
 
