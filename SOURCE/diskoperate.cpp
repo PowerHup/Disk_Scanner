@@ -672,7 +672,7 @@ void disk::showDirInfo(const TCHAR* dirPath)
         {
             if (iter->second->creationUTCTime < eFile->creationUTCTime)
                 eFile = iter->second;
-            if (iter->second->creationUTCTime > lFile->creationUTCTime)
+            if (iter->second->creationUTCTime >= lFile->creationUTCTime)
                 lFile = iter->second;
             dirFileCount++;
             dirFileSize += iter->second->fileSize;
