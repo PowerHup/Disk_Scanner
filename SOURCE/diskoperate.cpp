@@ -526,6 +526,8 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
 /*管理文件信息*/
 void disk::manageFileInfo(string& command)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
     shared_ptr<fileNode> tempNode;  //暂存文件节点
     time_t now;                     //存储当前时间
@@ -654,6 +656,8 @@ void disk::manageFileInfo(string& command)
 /*管理目录信息*/
 void disk::manageDirInfo(string& command)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
     shared_ptr<fileNode> tempNode;  //暂存文件节点
     time_t now;                     //存储当前时间
@@ -698,6 +702,8 @@ void disk::manageDirInfo(string& command)
 /*打印扫盘得到的信息*/
 void disk::showDiskInfo()
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     printer.printStar();
     cout << "---扫描目录：";
     _tprintf(_T("%s\n"), root->fileName);
@@ -715,6 +721,8 @@ void disk::showDiskInfo()
 /*查找并打印指定目录的文件信息*/
 void disk::showDirInfo(const TCHAR* dirPath)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     char timeStr[MAX_LENGTH];               //存储时间
     int dirFileCount;                       //存储文件总数
     ULONGLONG dirFileSize;                  //存储文件总大小
@@ -868,6 +876,8 @@ void disk::showDirInfo(const TCHAR* dirPath)
 /*查找并打印指定文件的基本信息*/
 void disk::showFileInfo(const TCHAR* filePath)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     shared_ptr<fileNode> tempNode;      //暂存文件节点
     char timeStr[MAX_LENGTH];           //存储各种时间字符串
     time_t now = time(nullptr);         //存储当前时间

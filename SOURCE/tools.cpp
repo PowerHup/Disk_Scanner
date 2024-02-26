@@ -9,6 +9,8 @@ using std::istringstream;
 /*TCHAR转string函数*/
 string tc2s(const TCHAR* str)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     string astr;
 
     int iLen = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
@@ -22,12 +24,16 @@ string tc2s(const TCHAR* str)
 /*string转TCHAR函数*/
 void s2tc(std::string str, TCHAR tstr[])
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     _stprintf_s(tstr, MAXLEN, _T("%s"), _tcsdup(std::wstring(str.begin(), str.end()).c_str()));
 }
 
 /*s2tc重载，返回TCHAR指针*/
 TCHAR* s2tc(std::string str)
 {
+    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+
     TCHAR* tstr = new TCHAR[2 * str.size() + 1];
 
     _stprintf_s(tstr, 3 * str.size(), _T("%s"), _tcsdup(std::wstring(str.begin(), str.end()).c_str()));

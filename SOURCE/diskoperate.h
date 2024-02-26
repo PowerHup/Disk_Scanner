@@ -64,8 +64,7 @@ private:
     std::fstream log;                   //日志文件的流对象
     fprinter::formatprinter printer;    //辅助打印的对象
     treePtr root;                       //根路径节点,目录树的根
-    statInfo statTable;
-    int diffCount;
+    statInfo statTable;                 //存储统计信息
     nodePtr findFileNode(const TCHAR* path, const TYPE mode) const;    //查找指定文件的位置，返回指向文件节点的指针
     int depthOfTree() const;            //计算目录树深度
     /*
