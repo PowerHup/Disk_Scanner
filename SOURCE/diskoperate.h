@@ -78,6 +78,6 @@ public:
     void manageFileInfo(std::string& command);      //管理文件信息
     void manageDirInfo(std::string& command);       //管理目录信息
     void showDiskInfo();                            //打印扫盘得到的信息，包括所有子目录数量，文件数，目录层数，目录树深度
-    void showDirInfo(const TCHAR* dirPath);         //打印指定目录的文件信息
+    bool showDirInfo(const TCHAR* dirPath);         //打印指定目录的文件信息
     void showFileInfo(const TCHAR* filePath);       //打印指定文件的基本信息
 };

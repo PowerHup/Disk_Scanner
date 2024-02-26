@@ -139,6 +139,8 @@ int _tmain(int argc, TCHAR* argv[])
 				myDisk.showDirInfo(tDirPath);
 				break;
 			case 2:
+				int diffCount, commandCount;
+				diffCount = commandCount = 0;
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(statFileName);
 				statFin.open(statFileName, std::ios::in);
@@ -162,9 +164,14 @@ int _tmain(int argc, TCHAR* argv[])
 				while (statCommand != "end of dirs")
 				{
 					s2tc(statCommand, tDirPath);
-					myDisk.showDirInfo(tDirPath);
+					if (myDisk.showDirInfo(tDirPath) == false)
+						diffCount++;
 					getline(statFin, statCommand);
+					commandCount++;
 				}
+				printer.printStar();
+				cout << "---共查询" << commandCount << "个目录，有" << diffCount << "个差异" << endl;
+				printer.printStar();
 				statFin.close();
 				break;
 			default:

@@ -719,7 +719,7 @@ void disk::showDiskInfo()
 }
 
 /*查找并打印指定目录的文件信息*/
-void disk::showDirInfo(const TCHAR* dirPath)
+bool disk::showDirInfo(const TCHAR* dirPath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
 
@@ -728,6 +728,7 @@ void disk::showDirInfo(const TCHAR* dirPath)
     ULONGLONG dirFileSize;                  //存储文件总大小
     nodePtr tempNode;                       //存储目录节点
     nodePtr eFile, lFile;                   //存储最早/最晚创建的文件节点
+    bool same = true;                      //标识是否发生差异
 
     /*查询目录节点位置*/
     time_t now = time(nullptr);
@@ -772,10 +773,11 @@ void disk::showDirInfo(const TCHAR* dirPath)
             log << "\t创建时间：" << static_cast<string>(timeStr);
             log << "\t文件大小：" << oldStat.latestFileSize << endl;
             log << "现目录不存在" << endl;
+            same = false;
         }
         printer.printStar();
 
-        return;
+        return same;
     }
 
     /*获取文件信息*/
@@ -866,11 +868,12 @@ void disk::showDirInfo(const TCHAR* dirPath)
                 cout << "\t文件大小：" << newStat.latestFileSize << endl;
             }
             statTable.find(tc2s(dirPath))->second = newStat;
+            same = false;
         }
     }
     printer.printStar();
 
-    return;
+    return same;
 }
 
 /*查找并打印指定文件的基本信息*/
