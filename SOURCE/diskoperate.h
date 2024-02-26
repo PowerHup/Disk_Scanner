@@ -39,7 +39,7 @@ private:
         fileNode(const fileNode& afileNode);     //结构体复制构造函数
         fileNode& operator=(const fileNode& afileNode);     //结构体重载赋值运算符
     };
-    int dirCount, fileCount, dirDepth, treeDepth;              //存储子目录数，文件数，层数，深度
+    int dirCount, fileCount, dirDepth, treeDepth;           //存储子目录数，文件数，层数，深度
     TCHAR longestPath[MAX_LENGTH];      //存储最长路径名
     std::fstream log;                   //日志文件的流对象
     fprinter::formatprinter printer;    //辅助打印的对象
