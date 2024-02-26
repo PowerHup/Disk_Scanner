@@ -20,8 +20,10 @@ class diskop::disk
 private:
     enum TYPE { _DIR, _FILE };          //用于标识此时读取的文件是目录还是文件
     struct fileNode;                    //声明文件信息节点
+    struct statData;
     using fileTree = fileNode;
     using fileChild = std::unordered_map<std::string, std::shared_ptr<fileNode>>;   //存储目录节点的孩子节点
+    using statInfo = std::unordered_map<std::string, statData>;                     //存储统计信息
     using childPtr = std::shared_ptr<fileChild>;
     using nodePtr = std::shared_ptr<fileNode>;
     using treePtr = nodePtr;
@@ -39,11 +41,31 @@ private:
         fileNode(const fileNode& afileNode);     //结构体复制构造函数
         fileNode& operator=(const fileNode& afileNode);     //结构体重载赋值运算符
     };
+    struct statData
+    {
+        int totalFileCount;
+        ULONGLONG totalFileSize;
+        TCHAR earlistFileName[MAX_LENGTH];
+        time_t earlistFileCreationTime;
+        ULONGLONG earlistFileSize;
+        TCHAR latestFileName[MAX_LENGTH];
+        time_t latestFileCreationTime;
+        ULONGLONG latestFileSize;
+        statData();
+        statData(const statData& astatData);
+        statData& operator=(const statData& astatData);
+        bool compareDir(const statData& astatData);
+        bool compareEarlistFile(const statData& astatData);
+        bool compareLatestFile(const statData& astatData);
+        bool operator==(const statData& astatData);
+    };
     int dirCount, fileCount, dirDepth, treeDepth;           //存储子目录数，文件数，层数，深度
     TCHAR longestPath[MAX_LENGTH];      //存储最长路径名
     std::fstream log;                   //日志文件的流对象
     fprinter::formatprinter printer;    //辅助打印的对象
     treePtr root;                       //根路径节点,目录树的根
+    statInfo statTable;
+    int diffCount;
     nodePtr findFileNode(const TCHAR* path, const TYPE mode) const;    //查找指定文件的位置，返回指向文件节点的指针
     int depthOfTree() const;            //计算目录树深度
     /*
