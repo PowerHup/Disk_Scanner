@@ -41,23 +41,23 @@ private:
         fileNode(const fileNode& afileNode);     //结构体复制构造函数
         fileNode& operator=(const fileNode& afileNode);     //结构体重载赋值运算符
     };
-    struct statData
+    struct statData                         //定义统计信息结构
     {
-        int totalFileCount;
-        ULONGLONG totalFileSize;
-        TCHAR earlistFileName[MAX_LENGTH];
-        time_t earlistFileCreationTime;
-        ULONGLONG earlistFileSize;
-        TCHAR latestFileName[MAX_LENGTH];
-        time_t latestFileCreationTime;
-        ULONGLONG latestFileSize;
-        statData();
-        statData(const statData& astatData);
-        statData& operator=(const statData& astatData);
-        bool compareDir(const statData& astatData) const;
-        bool compareEarlistFile(const statData& astatData) const;
-        bool compareLatestFile(const statData& astatData) const;
-        bool operator==(const statData& astatData) const;
+        int totalFileCount;                 //文件总数
+        ULONGLONG totalFileSize;            //文件总大小
+        TCHAR earlistFileName[MAX_LENGTH];  //最早创建文件名
+        time_t earlistFileCreationTime;     //最早创建时间
+        ULONGLONG earlistFileSize;          //最早文件大小
+        TCHAR latestFileName[MAX_LENGTH];   //最晚创建文件名
+        time_t latestFileCreationTime;      //最晚创建时间
+        ULONGLONG latestFileSize;           //最晚文件大小
+        statData();                         //结构体默认构造函数
+        statData(const statData& astatData);//结构体复制构造函数
+        statData& operator=(const statData& astatData); //结构体重载赋值运算符
+        bool compareDir(const statData& astatData) const;   //比较目录信息
+        bool compareEarlistFile(const statData& astatData) const;   //比较最早文件信息
+        bool compareLatestFile(const statData& astatData) const;    //比较最晚文件信息
+        bool operator==(const statData& astatData) const;           //结构体重载相等运算符
     };
     int dirCount, fileCount, dirDepth, treeDepth;           //存储子目录数，文件数，层数，深度
     TCHAR longestPath[MAX_LENGTH];      //存储最长路径名
