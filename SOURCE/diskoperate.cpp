@@ -388,7 +388,8 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 treeDepth = depthOfTree();
                 ctime_s(timeStr, MAX_LENGTH, &now);
                 log << "目录数：" << dirCount << endl;
-                log << "文件数：" << dirCount + fileCount << endl;
+                log << "文件数：" << fileCount << endl;
+                log << "文件总数：" << dirCount + fileCount << endl;
                 log << "目录层数：" << dirDepth << endl;
                 log << "目录树深度：" << treeDepth << endl;
                 log << "最长文件路径：" << tc2s(longestPath) << endl;
@@ -510,7 +511,8 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
     treeDepth = depthOfTree();
     ctime_s(timeStr, MAX_LENGTH, &now);
     log << "目录数：" << dirCount << endl;
-    log << "文件数：" << dirCount + fileCount << endl;
+    log << "文件数：" << fileCount << endl;
+    log << "文件总数：" << dirCount + fileCount << endl;
     log << "目录层数：" << dirDepth << endl;
     log << "目录树深度：" << treeDepth << endl;
     log << "最长文件路径：" << tc2s(longestPath) << endl;
@@ -707,7 +709,8 @@ void disk::showDiskInfo()
     cout << "---扫描目录：";
     _tprintf(_T("%s\n"), root->fileName);
     cout << "---目录数：" << dirCount << endl;
-    cout << "---文件数：" << dirCount + fileCount << endl;
+    cout << "---文件数：" << fileCount << endl;
+    cout << "---文件总数：" << dirCount + fileCount << endl;
     cout << "---目录层数：" << dirDepth << endl;
     cout << "---目录树深度：" << treeDepth << endl;
     cout << "---最长文件路径：" << tc2s(longestPath) << endl;
