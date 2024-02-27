@@ -71,6 +71,7 @@ int _tmain(int argc, TCHAR* argv[])
 		clearConsole();
 		switch (choice)
 		{
+			/*扫描目录*/
 		case 1:
 			printer.printDash();
 			cout << "***请输入需要扫描的目录的路径名（如：希望扫描C:\\Windows\\,请输入C:\\Windows\\*）" << endl;
@@ -100,6 +101,8 @@ int _tmain(int argc, TCHAR* argv[])
 			cout << "---扫描完成！" << endl;
 			myDisk.showDiskInfo();
 			break;
+
+			/*查找文件信息*/
 		case 2:
 			if (_tcslen(rootPath) == 0)
 			{
@@ -115,6 +118,8 @@ int _tmain(int argc, TCHAR* argv[])
 			s2tc(filePath, tFilePath);
 			myDisk.showFileInfo(tFilePath);
 			break;
+
+			/*查找目录信息*/
 		case 3:
 			if (_tcslen(rootPath) == 0)
 			{
@@ -130,6 +135,7 @@ int _tmain(int argc, TCHAR* argv[])
 			printer.printDash();
 			switch (mode)
 			{
+				/*查找单个目录*/
 			case 1:
 				cout << "***输入目录路径（末尾无需添加'*'）" << endl;
 				printer.scanFormat(dirPath);
@@ -138,6 +144,8 @@ int _tmain(int argc, TCHAR* argv[])
 				clearConsole();
 				myDisk.showDirInfo(tDirPath);
 				break;
+
+				/*读取目录查询命令*/
 			case 2:
 				int diffCount, commandCount;
 				diffCount = commandCount = 0;
@@ -183,6 +191,8 @@ int _tmain(int argc, TCHAR* argv[])
 				break;
 			}
 			break;
+
+			/*操作文件*/
 		case 4:
 			if (_tcslen(rootPath) == 0)
 			{
@@ -198,12 +208,15 @@ int _tmain(int argc, TCHAR* argv[])
 			printer.printDash();
 			switch (mode)
 			{
+				/*操作单个文件*/
 			case 1:
 				cout << "***输入文件操作命令" << endl;
 				printer.scanFormat(fileCommand);
 				clearConsole();
 				myDisk.manageFileInfo(fileCommand);
 				break;
+
+				/*读取文件操作命令*/
 			case 2:
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(fileopFileName);
@@ -241,6 +254,8 @@ int _tmain(int argc, TCHAR* argv[])
 				break;
 			}
 			break;
+
+			/*操作目录*/
 		case 5:
 			if (_tcslen(rootPath) == 0)
 			{
@@ -256,12 +271,15 @@ int _tmain(int argc, TCHAR* argv[])
 			printer.printDash();
 			switch (mode)
 			{
+				/*操作单个目录*/
 			case 1:
 				cout << "***输入目录操作命令" << endl;
 				printer.scanFormat(dirCommand);
 				clearConsole();
 				myDisk.manageDirInfo(dirCommand);
 				break;
+
+				/*读取目录操作文件*/
 			case 2:
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(diropFileName);
@@ -299,11 +317,15 @@ int _tmain(int argc, TCHAR* argv[])
 				break;
 			}
 			break;
+
+			/*退出程序*/
 		case 6:
 			printer.printDash();
 			cout << "***再见！" << endl;
 			printer.printDash();
 			return 0;
+
+			/*无效输入处理*/
 		default:
 			printer.printDash();
 			cout << "***无效的输入!" << endl;
