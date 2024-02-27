@@ -550,6 +550,7 @@ void disk::manageFileInfo(string& command)
     {
         /*删除操作*/
     case 'D':
+    case 'd':
         if (tempNode == nullptr)
         {
             cerr << "---目标文件不存在！" << endl;
@@ -578,6 +579,7 @@ void disk::manageFileInfo(string& command)
         break;
         /*修改操作*/
     case 'M':
+    case 'm':
         if (tempNode == nullptr)
         {
             cerr << "目标文件不存在！" << endl;
@@ -609,6 +611,7 @@ void disk::manageFileInfo(string& command)
         break;
         /*增加操作*/
     case 'A':
+    case 'a':
         cout << "---原文件不存在" << endl;
         cout << "---执行增加操作" << endl;
         vector<string> strs;
