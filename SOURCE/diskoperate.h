@@ -20,7 +20,7 @@ class diskop::disk
 private:
     enum TYPE { _DIR, _FILE };          //用于标识此时读取的文件是目录还是文件
     struct fileNode;                    //声明文件信息节点
-    struct statData;
+    struct statData;                    //声明统计信息节点
     using fileTree = fileNode;
     using fileChild = std::unordered_map<std::string, std::shared_ptr<fileNode>>;   //存储目录节点的孩子节点
     using statInfo = std::unordered_map<std::string, statData>;                     //存储统计信息

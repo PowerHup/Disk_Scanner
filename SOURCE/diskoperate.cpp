@@ -104,7 +104,7 @@ disk::statData& disk::statData::operator=(const statData& astatData)
     return *this;
 }
 
-/*统计结构体比较目录信息函数*/
+/*统计结构体比较目录信息函数，若目录中文件总数和文件总大小相等则返回true*/
 bool disk::statData::compareDir(const statData& astatData) const
 {
     if (totalFileCount == astatData.totalFileCount && totalFileSize == astatData.totalFileSize)
@@ -113,7 +113,7 @@ bool disk::statData::compareDir(const statData& astatData) const
         return false;
 }
 
-/*统计结构体比较最早创建文件信息函数*/
+/*统计结构体比较最早创建文件信息函数，若最早文件文件名、文件创建时间、文件大小均相等则返回true*/
 bool disk::statData::compareEarlistFile(const statData& astatData) const
 {
     if (!_tcscmp(earlistFileName, astatData.earlistFileName) && earlistFileCreationTime == astatData.earlistFileCreationTime && earlistFileSize == astatData.earlistFileSize)
@@ -122,7 +122,7 @@ bool disk::statData::compareEarlistFile(const statData& astatData) const
         return false;
 }
 
-/*统计结构体比较最晚创建文件信息函数*/
+/*统计结构体比较最晚创建文件信息函数，若最完文件文件名、文件创建时间、文件大小均相等则返回true*/
 bool disk::statData::compareLatestFile(const statData& astatData) const
 {
     if (!_tcscmp(latestFileName, astatData.latestFileName) && latestFileCreationTime == astatData.latestFileCreationTime && latestFileSize == astatData.latestFileSize)
@@ -131,7 +131,7 @@ bool disk::statData::compareLatestFile(const statData& astatData) const
         return false;
 }
 
-/*统计数据结构体重载相等运算符函数*/
+/*统计数据结构体重载相等运算符函数，若上述三个函数均返回true，则该函数返回true*/
 bool disk::statData::operator==(const statData& astatData) const
 {
     if (this->compareDir(astatData) && this->compareEarlistFile(astatData) && this->compareLatestFile(astatData))
@@ -147,7 +147,7 @@ disk::disk() :dirCount(0), fileCount(0), dirDepth(0), treeDepth(0), root(make_sh
     log.open("DISKLOG.log", ios::out | ios::app);
 }
 
-/*传入文件路径，查询指定文件的位置*/
+/*传入文件路径，查询指定文件的位置并返回节点指针*/
 disk::nodePtr disk::findFileNode(const TCHAR* path, const TYPE mode) const
 {
     vector<string> strs;                    //存储每一段路径
@@ -223,7 +223,7 @@ disk::nodePtr disk::findFileNode(const TCHAR* path, const TYPE mode) const
         return tempNode;
 }
 
-/*计算目录树深度*/
+/*计算目录树深度并返回*/
 int disk::depthOfTree() const
 {
     /*变量声明*/
@@ -272,7 +272,7 @@ int disk::depthOfTree() const
     return treeDepth;
 }
 
-/*扫盘函数，传入根目录路径和SQL文件名，采用深度优先遍历，利用栈进行，若扫描到目录，则深入目录搜索，若扫描的是文件，则输出文件信息并扫描下一文件，扫盘的同时构建目录树、生成SQL文件*/
+/*扫盘函数，传入根目录路径和SQL文件路径，采用深度优先遍历，若扫描到目录，则深入目录搜索，若扫描的是文件，则输出文件信息并扫描下一文件，扫盘的同时构建目录树、生成SQL文件*/
 void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -720,7 +720,7 @@ void disk::showDiskInfo()
     return;
 }
 
-/*传入目录路径，查找并打印指定目录的文件信息*/
+/*传入目录路径，查找并打印指定目录的文件信息，返回的bool值代表查找是否出现了差异*/
 bool disk::showDirInfo(const TCHAR* dirPath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文

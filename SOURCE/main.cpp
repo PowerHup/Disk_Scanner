@@ -47,7 +47,7 @@ int _tmain(int argc, TCHAR* argv[])
 	printer.printFormat("使用前请务必阅读安装文件夹中的README文件", '*');
 	while (1)
 	{
-		if (choice == 0)
+		if (rootPath[0] == 0)
 		{
 			printer.printDash();
 			cout << "***请选择功能" << endl;
@@ -245,6 +245,8 @@ int _tmain(int argc, TCHAR* argv[])
 				}
 				fileFin.close();
 				break;
+
+				/*处理无效输入*/
 			default:
 				printer.printDash();
 				cout << "***无效的输入!" << endl;
@@ -308,6 +310,8 @@ int _tmain(int argc, TCHAR* argv[])
 				}
 				dirFin.close();
 				break;
+
+				/*处理无效输入*/
 			default:
 				printer.printDash();
 				cout << "***无效的输入!" << endl;
@@ -323,6 +327,10 @@ int _tmain(int argc, TCHAR* argv[])
 			printer.printDash();
 			cout << "***再见！" << endl;
 			printer.printDash();
+			printer.printDash();
+			cout << "***按下回车键退出..." << endl;
+			printer.printDash();
+			cin.get();
 			return 0;
 
 			/*无效输入处理*/
