@@ -147,6 +147,12 @@ disk::disk() :dirCount(0), fileCount(0), dirDepth(0), treeDepth(0), root(make_sh
     log.open("DISKLOG.log", ios::out | ios::app);
 }
 
+/*磁盘类析构函数*/
+disk::~disk()
+{
+    log.close();
+}
+
 /*传入文件路径，查询指定文件的位置并返回节点指针*/
 disk::nodePtr disk::findFileNode(const TCHAR* path, const TYPE mode) const
 {
