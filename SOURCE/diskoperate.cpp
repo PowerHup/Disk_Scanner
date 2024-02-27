@@ -526,7 +526,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
 /*管理文件信息*/
 void disk::manageFileInfo(string& command)
 {
-    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+    _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
 
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
     shared_ptr<fileNode> tempNode;  //暂存文件节点
@@ -656,7 +656,7 @@ void disk::manageFileInfo(string& command)
 /*管理目录信息*/
 void disk::manageDirInfo(string& command)
 {
-    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
+    _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
 
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
     shared_ptr<fileNode> tempNode;  //暂存文件节点
@@ -743,7 +743,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     {
         cout << "---目标目录不存在！" << endl;
         log << "目标目录不存在！" << endl;
-        if (statTable.find(tc2s(dirPath)) != statTable.end())
+        if (statTable.find(tc2s(dirPath)) != statTable.end())       //当前目录不存在，可能是之前的操作将目录删除，若是被删除，则说明有差异
         {
             statData oldStat = statTable.find(tc2s(dirPath))->second;
 
@@ -787,7 +787,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     dirFileCount = 0;
     dirFileSize = 0;
     eFile = lFile = nullptr;
-    for (; iter != tempNode->subDir->end(); iter++)
+    for (; iter != tempNode->subDir->end(); iter++)     //寻找目录中的第一个文件
     {
         if (iter->second->fileType == _FILE)
         {
@@ -795,7 +795,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             break;
         }
     }
-    for (; iter != tempNode->subDir->end(); iter++)    //遍历寻找最早/最晚时间文件
+    for (; iter != tempNode->subDir->end(); iter++)     //遍历寻找最早/最晚时间文件
     {
         if (iter->second->fileType == _FILE)
         {
@@ -807,7 +807,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             dirFileSize += iter->second->fileSize;
         }
     }
-    if (eFile == nullptr)
+    if (eFile == nullptr)   //迭代器为空，说明目录中无文件
     {
         cout << "---目录内部无文件" << endl;
         if (statTable.find(tc2s(dirPath)) == statTable.end())
@@ -829,7 +829,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
         ctime_s(timeStr, MAX_LENGTH, &(lFile->creationUTCTime));
         cout << "\t创建时间：" << static_cast<string>(timeStr);
         cout << "\t文件大小：" << lFile->fileSize << endl;
-        if (statTable.find(tc2s(dirPath)) == statTable.end())
+        if (statTable.find(tc2s(dirPath)) == statTable.end())   //统计信息表中未发现已存在的统计信息，将信息计入表
         {
             statData tempStat;
 
@@ -843,7 +843,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             tempStat.latestFileSize = lFile->fileSize;
             statTable.insert(make_pair(tc2s(dirPath), tempStat));
         }
-        else
+        else    //统计信息表中已有该目录信息，比较是否有差异
         {
             statData oldStat = statTable.find(tc2s(dirPath))->second;
             statData newStat;
@@ -918,7 +918,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     }
     printer.printStar();
 
-    return same;
+    return same;    //返回差异标识
 }
 
 /*查找并打印指定文件的基本信息*/

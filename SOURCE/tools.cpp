@@ -29,18 +29,6 @@ void s2tc(std::string str, TCHAR tstr[])
     _stprintf_s(tstr, MAXLEN, _T("%s"), _tcsdup(std::wstring(str.begin(), str.end()).c_str()));
 }
 
-/*s2tc重载，返回TCHAR指针*/
-TCHAR* s2tc(std::string str)
-{
-    _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
-
-    TCHAR* tstr = new TCHAR[2 * str.size() + 1];
-
-    _stprintf_s(tstr, 3 * str.size(), _T("%s"), _tcsdup(std::wstring(str.begin(), str.end()).c_str()));
-
-    return tstr;
-}
-
 /*FILETIME转UTC时间*/
 time_t ft2t(FILETIME  ft)
 {

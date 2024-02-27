@@ -8,7 +8,6 @@ const int MAXLEN = 300;
 
 std::string tc2s(const TCHAR* str);			//TCHAR转string
 void s2tc(std::string str, TCHAR tstr[]);	//string转TCHAR
-TCHAR* s2tc(std::string str);				//s2tc重载，返回TCHAR指针
 time_t ft2t(FILETIME ft);					//FILETIME转UTC时间
 void strSplit(std::string& str, std::vector<std::string>& strs, char token);  //字符串分割
 void getCursorPosition(int& x, int& y);		//获取当前光标位置
