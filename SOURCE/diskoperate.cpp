@@ -859,7 +859,6 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             _tcscpy_s(newStat.latestFileName, MAX_LENGTH, lFile->fileName);
             newStat.latestFileCreationTime = lFile->creationUTCTime;
             newStat.latestFileSize = lFile->fileSize;
-            statTable.insert(make_pair(tc2s(dirPath), newStat));
             if (newStat == oldStat)
                 ;
             else
