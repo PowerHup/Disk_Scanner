@@ -141,7 +141,7 @@ bool disk::statData::operator==(const statData& astatData) const
 }
 
 /*磁盘类默认构造函数*/
-disk::disk() :dirCount(0), fileCount(0), dirDepth(0), treeDepth(0), root(make_shared<fileTree>())
+disk::disk() :dirCount(0), fileCount(0), errorCount(0), dirDepth(0), treeDepth(0), root(make_shared<fileTree>())
 {
     longestPath[0] = 0;
     log.open("DISKLOG.log", ios::out | ios::app);
@@ -396,6 +396,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 log << "目录数：" << dirCount << endl;
                 log << "文件数：" << fileCount << endl;
                 log << "文件总数：" << dirCount + fileCount << endl;
+                log << "无权限访问数：" << errorCount << endl;
                 log << "目录层数：" << dirDepth << endl;
                 log << "目录树深度：" << treeDepth << endl;
                 log << "最长文件路径：" << tc2s(longestPath) << endl;
@@ -468,6 +469,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 tempNode = newNode;                              //深度优先，下一个遍历的节点是该目录下的节点，tempNode指向该目录节点
                 if (progStack.top() == INVALID_HANDLE_VALUE)     //当前路径下的文件不可读，则直接标识SIGNAL，等待进入下一循环进行处理
                 {
+                    errorCount++;
                     sign = F;
                     break;
                 }
@@ -512,6 +514,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                         continue;
                     else if (GetLastError() == ERROR_NO_MORE_FILES)         //没有更多的文件可以查找，进入出栈处理程序
                     {
+                        errorCount++;
                         sign = F;
                         break;
                     }
@@ -527,6 +530,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
     log << "目录数：" << dirCount << endl;
     log << "文件数：" << fileCount << endl;
     log << "文件总数：" << dirCount + fileCount << endl;
+    log << "无权限访问数：" << errorCount << endl;
     log << "目录层数：" << dirDepth << endl;
     log << "目录树深度：" << treeDepth << endl;
     log << "最长文件路径：" << tc2s(longestPath) << endl;
@@ -725,6 +729,7 @@ void disk::showDiskInfo()
     cout << "---目录数：" << dirCount << endl;
     cout << "---文件数：" << fileCount << endl;
     cout << "---文件总数：" << dirCount + fileCount << endl;
+    cout << "---无权限访问数：" << errorCount << endl;
     cout << "---目录层数：" << dirDepth << endl;
     cout << "---目录树深度：" << treeDepth << endl;
     cout << "---最长文件路径：" << tc2s(longestPath) << endl;
