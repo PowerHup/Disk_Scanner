@@ -765,7 +765,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             cout << "\t文件大小：" << oldStat.latestFileSize << endl;
             cout << "---现目录不存在" << endl;
             statTable.erase(tc2s(dirPath));
-            log << "当前目录存在差异" << endl;
+            log << ">>>当前目录存在差异" << endl;
             log << "原目录文件总数：" << oldStat.totalFileCount << endl;
             log << "原文件文件总大小：" << oldStat.totalFileSize << endl;
             log << "原最早创建文件：" << tc2s(oldStat.earlistFileName) << endl;
@@ -867,7 +867,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
                 cout << "#####" << endl;
                 cout << "---当前目录存在差异" << endl;
                 cout << "#####" << endl;
-                log << "当前目录存在差异" << endl;
+                log << ">>>当前目录存在差异" << endl;
                 if (oldStat.compareDir(newStat))
                 {
                     cout << "---原目录文件总数：" << oldStat.totalFileCount << endl;
