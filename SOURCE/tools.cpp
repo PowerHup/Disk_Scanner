@@ -56,7 +56,7 @@ time_t ft2t(FILETIME  ft)
 }
 
 /*×Ö·û´®·Ö¸î*/
-void strSplit(string& str, vector<string>& strs, char token)
+void strSplit(string& str, vector<string>& strs, char token) 
 {
     istringstream iss(str);
 
