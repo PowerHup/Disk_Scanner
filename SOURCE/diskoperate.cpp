@@ -147,7 +147,7 @@ disk::disk() :dirCount(0), fileCount(0), dirDepth(0), treeDepth(0), root(make_sh
     log.open("DISKLOG.log", ios::out | ios::app);
 }
 
-/*查询指定文件的位置*/
+/*传入文件路径，查询指定文件的位置*/
 disk::nodePtr disk::findFileNode(const TCHAR* path, const TYPE mode) const
 {
     vector<string> strs;                    //存储每一段路径
@@ -272,7 +272,7 @@ int disk::depthOfTree() const
     return treeDepth;
 }
 
-/*扫盘函数，采用深度优先遍历，利用栈进行，若扫描到目录，则深入目录搜索，若扫描的是文件，则输出文件信息并扫描下一文件，扫盘的同时构建目录树、生成SQL文件*/
+/*扫盘函数，传入根目录路径和SQL文件名，采用深度优先遍历，利用栈进行，若扫描到目录，则深入目录搜索，若扫描的是文件，则输出文件信息并扫描下一文件，扫盘的同时构建目录树、生成SQL文件*/
 void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -525,7 +525,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
     return;
 }
 
-/*管理文件信息*/
+/*管理文件信息，传入文件操作命令，根据命令修改目录树节点*/
 void disk::manageFileInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
@@ -655,7 +655,7 @@ void disk::manageFileInfo(string& command)
     return;
 }
 
-/*管理目录信息*/
+/*管理目录信息，传入目录操作命令，根据命令修改目录树节点*/
 void disk::manageDirInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
@@ -720,7 +720,7 @@ void disk::showDiskInfo()
     return;
 }
 
-/*查找并打印指定目录的文件信息*/
+/*传入目录路径，查找并打印指定目录的文件信息*/
 bool disk::showDirInfo(const TCHAR* dirPath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -924,7 +924,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     return same;    //返回差异标识
 }
 
-/*查找并打印指定文件的基本信息*/
+/*传入文件路径，查找并打印指定文件的基本信息*/
 void disk::showFileInfo(const TCHAR* filePath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文

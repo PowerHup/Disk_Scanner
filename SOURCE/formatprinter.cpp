@@ -42,7 +42,7 @@ void formatprinter::printStar()
 	cout << endl;
 }
 
-/*打印提示语*/
+/*传入提示语和装饰符，打印提示语*/
 void formatprinter::printFormat(const string& text, const char token)
 {
 	int count;

@@ -6,7 +6,7 @@ using std::string;
 using std::vector;
 using std::istringstream;
 
-/*TCHAR转string函数*/
+/*TCHAR转string函数，传入TCHAR字符串，返回string*/
 string tc2s(const TCHAR* str)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -21,7 +21,7 @@ string tc2s(const TCHAR* str)
     return astr;
 }
 
-/*string转TCHAR函数*/
+/*string转TCHAR函数，传入string和TCHAR字符串，string被转换后存在TCHAR字符串中*/
 void s2tc(std::string str, TCHAR tstr[])
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -29,7 +29,7 @@ void s2tc(std::string str, TCHAR tstr[])
     _stprintf_s(tstr, MAXLEN, _T("%s"), _tcsdup(std::wstring(str.begin(), str.end()).c_str()));
 }
 
-/*FILETIME转UTC时间*/
+/*FILETIME转UTC时间，传入FILETIME结构，返回time_t*/
 time_t ft2t(FILETIME  ft)
 {
     ULONGLONG  ull;
@@ -43,7 +43,7 @@ time_t ft2t(FILETIME  ft)
     return (static_cast<time_t>(ui.QuadPart - 116444736000000000) / 10000000);
 }
 
-/*字符串分割*/
+/*字符串分割，传入string、vector、分割符，将string以token作为分割符分割，得到的string存入vector*/
 void strSplit(string& str, vector<string>& strs, char token) 
 {
     istringstream iss(str);
@@ -53,7 +53,7 @@ void strSplit(string& str, vector<string>& strs, char token)
         strs.push_back(temp);
 }
 
-/*获取当前光标位置*/
+/*获取当前光标位置，横纵坐标存入x、y*/
 void getCursorPosition(int& x, int& y)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -64,7 +64,7 @@ void getCursorPosition(int& x, int& y)
     return;
 }
 
-/*前往指定光标位置*/
+/*前往指定光标位置，横纵坐标为x、y*/
 void setCursorPosition(int x, int y)
 {
     COORD coord;
