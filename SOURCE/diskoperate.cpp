@@ -777,11 +777,19 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     }
 
     /*获取文件信息*/
+    fileChild::iterator iter = tempNode->subDir->begin();
     dirFileCount = 0;
     dirFileSize = 0;
-    eFile = tempNode->subDir->begin()->second;
-    lFile = tempNode->subDir->begin()->second;
-    for (fileChild::iterator iter = tempNode->subDir->begin(); iter != tempNode->subDir->end(); iter++)    //遍历寻找最早/最晚时间文件
+    eFile = lFile = nullptr;
+    for (; iter != tempNode->subDir->end(); iter++)
+    {
+        if (iter->second->fileType == _FILE)
+        {
+            eFile = lFile = iter->second;
+            break;
+        }
+    }
+    for (; iter != tempNode->subDir->end(); iter++)    //遍历寻找最早/最晚时间文件
     {
         if (iter->second->fileType == _FILE)
         {
@@ -793,78 +801,91 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             dirFileSize += iter->second->fileSize;
         }
     }
-    cout << "---文件总数：" << dirFileCount << endl;
-    cout << "---文件总大小：" << dirFileSize << endl;
-    cout << "---最早创建文件：" << tc2s(eFile->fileName) << endl;
-    ctime_s(timeStr, MAX_LENGTH, &(eFile->creationUTCTime));
-    cout << "\t创建时间：" << static_cast<string>(timeStr);
-    cout << "\t文件大小：" << eFile->fileSize << endl;
-    cout << "---最晚创建文件：" << tc2s(lFile->fileName) << endl;
-    ctime_s(timeStr, MAX_LENGTH, &(lFile->creationUTCTime));
-    cout << "\t创建时间：" << static_cast<string>(timeStr);
-    cout << "\t文件大小：" << lFile->fileSize << endl;
-    if (statTable.find(tc2s(dirPath)) == statTable.end())
+    if (eFile == nullptr)
     {
-        statData tempStat;
+        cout << "---目录内部无文件" << endl;
+        if (statTable.find(tc2s(dirPath)) == statTable.end())
+        {
+            statData tempStat;
 
-        tempStat.totalFileCount = dirFileCount;
-        tempStat.totalFileSize = dirFileSize;
-        _tcscpy_s(tempStat.earlistFileName, MAX_LENGTH, eFile->fileName);
-        tempStat.earlistFileCreationTime = eFile->creationUTCTime;
-        tempStat.earlistFileSize = eFile->fileSize;
-        _tcscpy_s(tempStat.latestFileName, MAX_LENGTH, lFile->fileName);
-        tempStat.latestFileCreationTime = lFile->creationUTCTime;
-        tempStat.latestFileSize = lFile->fileSize;
-        statTable.insert(make_pair(tc2s(dirPath), tempStat));
+            statTable.insert(make_pair(tc2s(dirPath), tempStat));
+        }
     }
     else
     {
-        statData oldStat = statTable.find(tc2s(dirPath))->second;
-        statData newStat;
+        cout << "---文件总数：" << dirFileCount << endl;
+        cout << "---文件总大小：" << dirFileSize << endl;
+        cout << "---最早创建文件：" << tc2s(eFile->fileName) << endl;
+        ctime_s(timeStr, MAX_LENGTH, &(eFile->creationUTCTime));
+        cout << "\t创建时间：" << static_cast<string>(timeStr);
+        cout << "\t文件大小：" << eFile->fileSize << endl;
+        cout << "---最晚创建文件：" << tc2s(lFile->fileName) << endl;
+        ctime_s(timeStr, MAX_LENGTH, &(lFile->creationUTCTime));
+        cout << "\t创建时间：" << static_cast<string>(timeStr);
+        cout << "\t文件大小：" << lFile->fileSize << endl;
+        if (statTable.find(tc2s(dirPath)) == statTable.end())
+        {
+            statData tempStat;
 
-        newStat.totalFileCount = dirFileCount;
-        newStat.totalFileSize = dirFileSize;
-        _tcscpy_s(newStat.earlistFileName, MAX_LENGTH, eFile->fileName);
-        newStat.earlistFileCreationTime = eFile->creationUTCTime;
-        newStat.earlistFileSize = eFile->fileSize;
-        _tcscpy_s(newStat.latestFileName, MAX_LENGTH, lFile->fileName);
-        newStat.latestFileCreationTime = lFile->creationUTCTime;
-        newStat.latestFileSize = lFile->fileSize;
-        statTable.insert(make_pair(tc2s(dirPath), newStat));
-        if (newStat == oldStat)
-            ;
+            tempStat.totalFileCount = dirFileCount;
+            tempStat.totalFileSize = dirFileSize;
+            _tcscpy_s(tempStat.earlistFileName, MAX_LENGTH, eFile->fileName);
+            tempStat.earlistFileCreationTime = eFile->creationUTCTime;
+            tempStat.earlistFileSize = eFile->fileSize;
+            _tcscpy_s(tempStat.latestFileName, MAX_LENGTH, lFile->fileName);
+            tempStat.latestFileCreationTime = lFile->creationUTCTime;
+            tempStat.latestFileSize = lFile->fileSize;
+            statTable.insert(make_pair(tc2s(dirPath), tempStat));
+        }
         else
         {
-            cout << "---当前目录存在差异" << endl;
-            if (oldStat.compareDir(newStat))
+            statData oldStat = statTable.find(tc2s(dirPath))->second;
+            statData newStat;
+
+            newStat.totalFileCount = dirFileCount;
+            newStat.totalFileSize = dirFileSize;
+            _tcscpy_s(newStat.earlistFileName, MAX_LENGTH, eFile->fileName);
+            newStat.earlistFileCreationTime = eFile->creationUTCTime;
+            newStat.earlistFileSize = eFile->fileSize;
+            _tcscpy_s(newStat.latestFileName, MAX_LENGTH, lFile->fileName);
+            newStat.latestFileCreationTime = lFile->creationUTCTime;
+            newStat.latestFileSize = lFile->fileSize;
+            statTable.insert(make_pair(tc2s(dirPath), newStat));
+            if (newStat == oldStat)
+                ;
+            else
             {
-                cout << "---原目录文件总数：" << oldStat.totalFileCount << endl;
-                cout << "---原文件文件总大小：" << oldStat.totalFileSize << endl;
+                cout << "---当前目录存在差异" << endl;
+                if (oldStat.compareDir(newStat))
+                {
+                    cout << "---原目录文件总数：" << oldStat.totalFileCount << endl;
+                    cout << "---原文件文件总大小：" << oldStat.totalFileSize << endl;
+                }
+                if (oldStat.compareEarlistFile(newStat))
+                {
+                    cout << "---原最早创建文件：" << tc2s(oldStat.earlistFileName) << endl;
+                    ctime_s(timeStr, MAX_LENGTH, &(oldStat.earlistFileCreationTime));
+                    cout << "\t创建时间：" << static_cast<string>(timeStr);
+                    cout << "\t文件大小：" << oldStat.earlistFileSize << endl;
+                    cout << "---现最早创建文件：" << tc2s(newStat.earlistFileName) << endl;
+                    ctime_s(timeStr, MAX_LENGTH, &(newStat.earlistFileCreationTime));
+                    cout << "\t创建时间：" << static_cast<string>(timeStr);
+                    cout << "\t文件大小：" << newStat.earlistFileSize << endl;
+                }
+                if (oldStat.compareLatestFile(newStat))
+                {
+                    cout << "---原最晚创建文件：" << tc2s(oldStat.latestFileName) << endl;
+                    ctime_s(timeStr, MAX_LENGTH, &(oldStat.latestFileCreationTime));
+                    cout << "\t创建时间：" << static_cast<string>(timeStr);
+                    cout << "\t文件大小：" << oldStat.latestFileSize << endl;
+                    cout << "---现最晚创建文件：" << tc2s(newStat.latestFileName) << endl;
+                    ctime_s(timeStr, MAX_LENGTH, &(newStat.latestFileCreationTime));
+                    cout << "\t创建时间：" << static_cast<string>(timeStr);
+                    cout << "\t文件大小：" << newStat.latestFileSize << endl;
+                }
+                statTable.find(tc2s(dirPath))->second = newStat;
+                same = false;
             }
-            if (oldStat.compareEarlistFile(newStat))
-            {
-                cout << "---原最早创建文件：" << tc2s(oldStat.earlistFileName) << endl;
-                ctime_s(timeStr, MAX_LENGTH, &(oldStat.earlistFileCreationTime));
-                cout << "\t创建时间：" << static_cast<string>(timeStr);
-                cout << "\t文件大小：" << oldStat.earlistFileSize << endl;
-                cout << "---现最早创建文件：" << tc2s(newStat.earlistFileName) << endl;
-                ctime_s(timeStr, MAX_LENGTH, &(newStat.earlistFileCreationTime));
-                cout << "\t创建时间：" << static_cast<string>(timeStr);
-                cout << "\t文件大小：" << newStat.earlistFileSize << endl;
-            }
-            if (oldStat.compareLatestFile(newStat))
-            {
-                cout << "---原最晚创建文件：" << tc2s(oldStat.latestFileName) << endl;
-                ctime_s(timeStr, MAX_LENGTH, &(oldStat.latestFileCreationTime));
-                cout << "\t创建时间：" << static_cast<string>(timeStr);
-                cout << "\t文件大小：" << oldStat.latestFileSize << endl;
-                cout << "---现最晚创建文件：" << tc2s(newStat.latestFileName) << endl;
-                ctime_s(timeStr, MAX_LENGTH, &(newStat.latestFileCreationTime));
-                cout << "\t创建时间：" << static_cast<string>(timeStr);
-                cout << "\t文件大小：" << newStat.latestFileSize << endl;
-            }
-            statTable.find(tc2s(dirPath))->second = newStat;
-            same = false;
         }
     }
     printer.printStar();
