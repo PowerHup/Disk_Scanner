@@ -913,12 +913,12 @@ bool disk::showDirInfo(const TCHAR* dirPath)
                     log << "\t创建时间：" << static_cast<string>(timeStr);
                     log << "\t文件大小：" << newStat.latestFileSize << endl;
                 }
-                log << "-----------------" << endl;
                 statTable.find(tc2s(dirPath))->second = newStat;
                 same = false;
             }
         }
     }
+    log << "-----------------" << endl;
     printer.printStar();
 
     return same;    //返回差异标识
