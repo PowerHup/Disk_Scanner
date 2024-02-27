@@ -182,6 +182,8 @@ int _tmain(int argc, TCHAR* argv[])
 				printer.printStar();
 				statFin.close();
 				break;
+
+				/*处理无效数据*/
 			default:
 				printer.printDash();
 				cout << "***无效的输入!" << endl;
