@@ -506,8 +506,16 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 fout << ");" << endl;
                 if (_tcslen(longestPath) < _tcslen(filePath))           //比较路径名长度，求最长全路径名
                     _tcscpy_s(longestPath, MAX_LENGTH, filePath);
-                if (FindNextFile(progStack.top(), &findFileData) == 0)  //当前已经到达最深，继续扫描下一文件，若无下一文件，则标识SIGNAL
-                    sign = F;
+                while (FindNextFile(progStack.top(), &findFileData) == 0)   //返回值是FALSE，进行下一步判断
+                {
+                    if (GetLastError() == ERROR_ACCESS_DENIED)              //无权访问，继续找下一个文件
+                        continue;
+                    else if (GetLastError() == ERROR_NO_MORE_FILES)         //没有更多的文件可以查找，进入出栈处理程序
+                    {
+                        sign = F;
+                        break;
+                    }
+                }
                 break;
             }
         }

@@ -75,7 +75,7 @@ private:
 public:
     disk(); //构造函数
     ~disk();//析构函数
-    void scanAndBuild(const TCHAR* rootPath, std::string& sqlFileName);       //扫盘函数,同时构建目录树
+    void scanAndBuild(const TCHAR* rootPath, std::string& sqlFileName); //扫盘函数,同时构建目录树
     void manageFileInfo(std::string& command);      //管理文件信息
     void manageDirInfo(std::string& command);       //管理目录信息
     void showDiskInfo();                            //打印扫盘得到的信息，包括所有子目录数量，文件数，目录层数，目录树深度
