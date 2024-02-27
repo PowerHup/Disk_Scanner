@@ -5,6 +5,7 @@
 #include<iostream>
 #include<string>
 #include<tchar.h>
+#include<climits>
 
 using namespace diskop;
 using namespace fprinter;
@@ -189,6 +190,7 @@ int _tmain(int argc, TCHAR* argv[])
 				cout << "***无效的输入!" << endl;
 				printer.printDash();
 				cin.clear();
+				cin.putback('\n');
 				cin.ignore(INT_MAX, '\n');
 				break;
 			}
@@ -254,6 +256,7 @@ int _tmain(int argc, TCHAR* argv[])
 				cout << "***无效的输入!" << endl;
 				printer.printDash();
 				cin.clear();
+				cin.putback('\n');
 				cin.ignore(INT_MAX, '\n');
 				break;
 			}
@@ -319,6 +322,7 @@ int _tmain(int argc, TCHAR* argv[])
 				cout << "***无效的输入!" << endl;
 				printer.printDash();
 				cin.clear();
+				cin.putback('\n');
 				cin.ignore(INT_MAX, '\n');
 				break;
 			}
@@ -341,6 +345,7 @@ int _tmain(int argc, TCHAR* argv[])
 			cout << "***无效的输入!" << endl;
 			printer.printDash();
 			cin.clear();
+			cin.putback('\n');
 			cin.ignore(INT_MAX, '\n');
 			break;
 		}
