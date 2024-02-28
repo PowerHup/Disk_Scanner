@@ -545,7 +545,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
     return;
 }
 
-/*管理文件信息，传入文件操作命令，根据命令修改目录树节点*/
+/*管理文件信息，传入文件操作命令，根据命令修改目录树节点，返回值代表是否操作成功*/
 bool disk::manageFileInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
@@ -698,7 +698,7 @@ bool disk::manageFileInfo(string& command)
     return true;
 }
 
-/*管理目录信息，传入目录操作命令，根据命令修改目录树节点*/
+/*管理目录信息，传入目录操作命令，根据命令修改目录树节点，返回值代表是否操作成功*/
 bool disk::manageDirInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
@@ -789,7 +789,7 @@ void disk::showDiskInfo()
     return;
 }
 
-/*传入目录路径，查找并打印指定目录的文件信息，返回的bool值代表查找是否出现了差异*/
+/*传入目录路径和差异标志，查找并打印指定目录的文件信息，若目录有差异则same被置为false，返回的bool值代表查找是否查询成功*/
 bool disk::showDirInfo(const TCHAR* dirPath, bool& same)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
@@ -986,7 +986,7 @@ bool disk::showDirInfo(const TCHAR* dirPath, bool& same)
     return true;
 }
 
-/*传入文件路径，查找并打印指定文件的基本信息*/
+/*传入文件路径，查找并打印指定文件的基本信息，返回值代表是否查询成功*/
 bool disk::showFileInfo(const TCHAR* filePath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
