@@ -511,10 +511,12 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 while (FindNextFile(progStack.top(), &findFileData) == 0)   //返回值是FALSE，进行下一步判断
                 {
                     if (GetLastError() == ERROR_ACCESS_DENIED)              //无权访问，继续找下一个文件
-                        continue;
-                    else if (GetLastError() == ERROR_NO_MORE_FILES)         //没有更多的文件可以查找，进入出栈处理程序
                     {
                         errorCount++;
+                        continue;
+                    }
+                    else if (GetLastError() == ERROR_NO_MORE_FILES)         //没有更多的文件可以查找，进入出栈处理程序
+                    {
                         sign = F;
                         break;
                     }
