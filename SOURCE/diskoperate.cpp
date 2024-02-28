@@ -546,7 +546,7 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
 }
 
 /*管理文件信息，传入文件操作命令，根据命令修改目录树节点*/
-void disk::manageFileInfo(string& command)
+bool disk::manageFileInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
 
@@ -577,6 +577,8 @@ void disk::manageFileInfo(string& command)
         printer.printDash();
         log << "操作命令 " << command << " 无效的命令！" << endl;
         log << "-----------------" << endl;
+
+        return false;
     }
 
     /*命令执行主体*/
@@ -591,7 +593,7 @@ void disk::manageFileInfo(string& command)
             printer.printStar();
             log << "目标文件不存在！" << endl;
             log << "-----------------" << endl;
-            return;
+            return false;
         }
         else
         {
@@ -621,7 +623,7 @@ void disk::manageFileInfo(string& command)
             cout << "---执行删除操作" << endl;
             log << "目标文件不存在！" << endl;
             log << "-----------------" << endl;
-            return;
+            return false;
         }
         else
         {
@@ -662,7 +664,7 @@ void disk::manageFileInfo(string& command)
             printer.printStar();
             log << "目标上级目录不存在！" << endl;
             log << "-----------------" << endl;
-            return;
+            return false;
         }
         /*创建新文件节点*/
         newNode = make_shared<fileNode>();
@@ -690,14 +692,14 @@ void disk::manageFileInfo(string& command)
         printer.printStar();
         log << "操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         log << "-----------------" << endl;
-        break;
+        return false;
     }
 
-    return;
+    return true;
 }
 
 /*管理目录信息，传入目录操作命令，根据命令修改目录树节点*/
-void disk::manageDirInfo(string& command)
+bool disk::manageDirInfo(string& command)
 {
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
 
@@ -727,6 +729,8 @@ void disk::manageDirInfo(string& command)
         printer.printDash();
         log << "操作命令 " << command << " 无效的命令！" << endl;
         log << "-----------------" << endl;
+
+        return false;
     }
 
     switch (commandPart[1][0])
@@ -740,7 +744,7 @@ void disk::manageDirInfo(string& command)
             printer.printStar();
             log << "目标目录不存在！" << endl;
             log << "-----------------" << endl;
-            return;
+            return false;
         }
         _tcscpy_s(tDirName, MAX_LENGTH, tempNode->fileName);
         dirName = tc2s(tDirName);
@@ -758,10 +762,10 @@ void disk::manageDirInfo(string& command)
         printer.printStar();
         log << "操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         log << "-----------------" << endl;
-        break;
+        return false;
     }
 
-    return;
+    return true;
 }
 
 /*打印扫盘得到的信息*/
@@ -786,7 +790,7 @@ void disk::showDiskInfo()
 }
 
 /*传入目录路径，查找并打印指定目录的文件信息，返回的bool值代表查找是否出现了差异*/
-bool disk::showDirInfo(const TCHAR* dirPath)
+bool disk::showDirInfo(const TCHAR* dirPath, bool& same)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
 
@@ -795,7 +799,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     ULONGLONG dirFileSize;                  //存储文件总大小
     nodePtr tempNode;                       //存储目录节点
     nodePtr eFile, lFile;                   //存储最早/最晚创建的文件节点
-    bool same = true;                      //标识是否发生差异
+    same = true;
 
     /*查询目录节点位置*/
     time_t now = time(nullptr);
@@ -827,7 +831,6 @@ bool disk::showDirInfo(const TCHAR* dirPath)
             cout << "\t创建时间：" << static_cast<string>(timeStr);
             cout << "\t文件大小：" << oldStat.latestFileSize << endl;
             cout << "---现目录不存在" << endl;
-            statTable.erase(tc2s(dirPath));
             log << "***当前目录存在差异" << endl;
             log << "原目录文件总数：" << oldStat.totalFileCount << endl;
             log << "原文件文件总大小：" << oldStat.totalFileSize << endl;
@@ -845,7 +848,7 @@ bool disk::showDirInfo(const TCHAR* dirPath)
         printer.printStar();
         log << "-----------------" << endl;
 
-        return same;
+        return false;
     }
 
     /*获取文件信息*/
@@ -973,7 +976,6 @@ bool disk::showDirInfo(const TCHAR* dirPath)
                     log << "\t创建时间：" << static_cast<string>(timeStr);
                     log << "\t文件大小：" << newStat.latestFileSize << endl;
                 }
-                statTable.find(tc2s(dirPath))->second = newStat;
                 same = false;
             }
         }
@@ -981,11 +983,11 @@ bool disk::showDirInfo(const TCHAR* dirPath)
     log << "-----------------" << endl;
     printer.printStar();
 
-    return same;    //返回差异标识
+    return true;
 }
 
 /*传入文件路径，查找并打印指定文件的基本信息*/
-void disk::showFileInfo(const TCHAR* filePath)
+bool disk::showFileInfo(const TCHAR* filePath)
 {
     _tsetlocale(LC_ALL, _T("chs"));     //添加设置，否则无法输出中文
 
@@ -1006,7 +1008,7 @@ void disk::showFileInfo(const TCHAR* filePath)
         printer.printStar();
         log << "目标文件不存在！" << endl;
         log << "-----------------" << endl;
-        return;
+        return false;
     }
     ctime_s(timeStr, MAX_LENGTH, &(tempNode->creationUTCTime));
     cout << "---文件大小：" << tempNode->fileSize << endl;
@@ -1016,5 +1018,5 @@ void disk::showFileInfo(const TCHAR* filePath)
     log << "文件创建时间：" << timeStr;
     log << "-----------------" << endl;
 
-    return;
+    return true;
 }

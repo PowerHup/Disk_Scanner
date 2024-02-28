@@ -35,17 +35,19 @@ int _tmain(int argc, TCHAR* argv[])
 	string statFileName;		//存储目录查询文件名
 	string fileopFileName;		//存储文件操作命令文件名
 	string diropFileName;		//存储目录操作命令文件名
-	fstream sqlFout;			//作为输出的SQL文件
 	fstream statFin;			//作为输入的目录文件
 	fstream fileFin;			//作为输入的文件操作文件
 	fstream dirFin;				//作为输入的目录操作文件
 	int choice = 0;				//存储用户功能选择
 	int mode = 0;				//存储子功能模式
 	int x, y, ix, iy;			//存储控制台光标位置，辅助输出
+	bool same = true;			//目录差异标志
+	int diffCount, commandCount, failCount;	//记录差异个数、命令个数、失败个数
 
 	rootPath[0] = 0;
 	printer.printFormat("DISK SCANNER", '-');
 	printer.printFormat("使用前请务必阅读安装文件夹中的README文件", '*');
+	diffCount = commandCount = failCount = 0;
 	while (1)
 	{
 		if (rootPath[0] == 0)
@@ -143,13 +145,12 @@ int _tmain(int argc, TCHAR* argv[])
 				printer.printDash();
 				s2tc(dirPath, tDirPath);
 				clearConsole();
-				myDisk.showDirInfo(tDirPath);
+				myDisk.showDirInfo(tDirPath, same);
 				break;
 
 				/*读取目录查询命令*/
 			case 2:
-				int diffCount, commandCount;
-				diffCount = commandCount = 0;
+				diffCount = commandCount = failCount = 0;
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(statFileName);
 				statFin.open(statFileName, std::ios::in);
@@ -172,14 +173,16 @@ int _tmain(int argc, TCHAR* argv[])
 				getline(statFin, statCommand);
 				while (statCommand != "end of dirs")
 				{
+					commandCount++;
 					s2tc(statCommand, tDirPath);
-					if (myDisk.showDirInfo(tDirPath) == false)
+					if (myDisk.showDirInfo(tDirPath, same) == false)
+						failCount++;
+					if (same == false)
 						diffCount++;
 					getline(statFin, statCommand);
-					commandCount++;
 				}
 				printer.printStar();
-				cout << "---共查询" << commandCount << "个目录，有" << diffCount << "个差异" << endl;
+				cout << "---共查询" << commandCount << "个目录，有" << diffCount << "个差异，" << failCount << "个目录查询失败" << endl;
 				printer.printStar();
 				statFin.close();
 				break;
@@ -222,6 +225,7 @@ int _tmain(int argc, TCHAR* argv[])
 
 				/*读取文件操作命令*/
 			case 2:
+				commandCount = failCount = 0;
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(fileopFileName);
 				fileFin.open(fileopFileName, std::ios::in);
@@ -244,9 +248,14 @@ int _tmain(int argc, TCHAR* argv[])
 				getline(fileFin, fileCommand);
 				while (fileCommand != "end of files")
 				{
-					myDisk.manageFileInfo(fileCommand);
+					commandCount++;
+					if (myDisk.manageFileInfo(fileCommand) == false)
+						failCount++;
 					getline(fileFin, fileCommand);
 				}
+				printer.printStar();
+				cout << "---共操作" << commandCount << "个文件，" << failCount << "个文件操作失败" << endl;
+				printer.printStar();
 				fileFin.close();
 				break;
 
@@ -288,6 +297,7 @@ int _tmain(int argc, TCHAR* argv[])
 
 				/*读取目录操作文件*/
 			case 2:
+				commandCount = failCount = 0;
 				cout << "***输入命令文件地址" << endl;
 				printer.scanFormat(diropFileName);
 				dirFin.open(diropFileName, std::ios::in);
@@ -310,9 +320,14 @@ int _tmain(int argc, TCHAR* argv[])
 				getline(dirFin, dirCommand);
 				while (dirCommand != "end of dirs")
 				{
-					myDisk.manageDirInfo(dirCommand);
+					commandCount++;
+					if (myDisk.manageDirInfo(dirCommand) == false)
+						failCount++;
 					getline(dirFin, dirCommand);
 				}
+				printer.printStar();
+				cout << "---共操作" << commandCount << "个目录，" << failCount << "个目录操作失败" << endl;
+				printer.printStar();
 				dirFin.close();
 				break;
 
