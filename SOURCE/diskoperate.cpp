@@ -570,6 +570,15 @@ void disk::manageFileInfo(string& command)
     log << "TIME:" << timeStr;
     log << "操作目标文件：" << commandPart[0] << endl;
 
+    /*处理格式有误的命令*/
+    if (commandPart.size() != 4)
+    {
+        cout << "---操作命令 " << command << " 无效的命令！" << endl;
+        printer.printDash();
+        log << "操作命令 " << command << " 无效的命令！" << endl;
+        log << "-----------------" << endl;
+    }
+
     /*命令执行主体*/
     switch (commandPart[1][0])
     {
@@ -677,9 +686,9 @@ void disk::manageFileInfo(string& command)
 
         /*处理无效操作*/
     default:
-        cout << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        cout << "---操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         printer.printStar();
-        log << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        log << "操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         log << "-----------------" << endl;
         break;
     }
@@ -711,6 +720,15 @@ void disk::manageDirInfo(string& command)
     log << "TIME:" << timeStr;
     log << "操作目标目录：" << commandPart[0] << endl;
 
+    /*处理格式有误的命令*/
+    if (commandPart.size() != 4)
+    {
+        cout << "---操作命令 " << command << " 无效的命令！" << endl;
+        printer.printDash();
+        log << "操作命令 " << command << " 无效的命令！" << endl;
+        log << "-----------------" << endl;
+    }
+
     switch (commandPart[1][0])
     {
         /*删除操作*/
@@ -736,9 +754,9 @@ void disk::manageDirInfo(string& command)
 
         /*处理无效输入*/
     default:
-        cout << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        cout << "---操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         printer.printStar();
-        log << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        log << "操作码 \'" << commandPart[1][0] << "\' 无效的操作类型！" << endl;
         log << "-----------------" << endl;
         break;
     }
