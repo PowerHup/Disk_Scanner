@@ -551,6 +551,9 @@ void disk::manageFileInfo(string& command)
     _tsetlocale(LC_ALL, _T("chs")); //添加设置，否则无法输出中文
 
     vector<string> commandPart;     //存储将指令拆分为多部分的容器
+    vector<string> strs;            //存储路径每级的文件名
+    string path;                    //存储父目录路径
+    shared_ptr<fileNode> newNode;   //存储新增的节点
     shared_ptr<fileNode> tempNode;  //暂存文件节点
     time_t now;                     //存储当前时间
     TCHAR tempPath[MAX_LENGTH];
@@ -599,6 +602,7 @@ void disk::manageFileInfo(string& command)
             log << "-----------------" << endl;
         }
         break;
+
         /*修改操作*/
     case 'M':
     case 'm':
@@ -631,14 +635,14 @@ void disk::manageFileInfo(string& command)
             log << "-----------------" << endl;
         }
         break;
+
         /*增加操作*/
     case 'A':
     case 'a':
         cout << "---原文件不存在" << endl;
         cout << "---执行增加操作" << endl;
-        vector<string> strs;
         strSplit(commandPart[0], strs, '\\');
-        string path = strs[0] + "\\";
+        path = strs[0] + "\\";
         for (int i = 1; i < strs.size() - 1; i++)
             path += strs[i] + "\\";
         s2tc(path, tempPath);
@@ -652,7 +656,7 @@ void disk::manageFileInfo(string& command)
             return;
         }
         /*创建新文件节点*/
-        shared_ptr<fileNode> newNode = make_shared<fileNode>();
+        newNode = make_shared<fileNode>();
         s2tc(commandPart[0], tempPath);
         _tcscpy_s(newNode->fileName, MAX_LENGTH, tempPath);
         newNode->creationUTCTime = stoll(commandPart[2]);
@@ -668,6 +672,14 @@ void disk::manageFileInfo(string& command)
         printer.printStar();
         log << "新文件大小：" << tempNode->fileSize << endl;
         log << "新文件创建时间：" << timeStr;
+        log << "-----------------" << endl;
+        break;
+
+        /*处理无效操作*/
+    default:
+        cout << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        printer.printStar();
+        log << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
         log << "-----------------" << endl;
         break;
     }
@@ -699,23 +711,37 @@ void disk::manageDirInfo(string& command)
     log << "TIME:" << timeStr;
     log << "操作目标目录：" << commandPart[0] << endl;
 
-    if (tempNode == nullptr)
+    switch (commandPart[1][0])
     {
-        cerr << "---目标目录不存在！" << endl;
+        /*删除操作*/
+    case 'D':
+    case 'd':
+        if (tempNode == nullptr)
+        {
+            cerr << "---目标目录不存在！" << endl;
+            printer.printStar();
+            log << "目标目录不存在！" << endl;
+            log << "-----------------" << endl;
+            return;
+        }
+        _tcscpy_s(tDirName, MAX_LENGTH, tempNode->fileName);
+        dirName = tc2s(tDirName);
+        tempNode = tempNode->parentDir;
+        tempNode->subDir->erase(dirName);       //从上级目录删除子目录
+        cout << "---目录已删除！" << endl;
         printer.printStar();
-        log << "目标目录不存在！" << endl;
+        log << "目录已删除！" << endl;
         log << "-----------------" << endl;
-        return;
-    }
+        break;
 
-    _tcscpy_s(tDirName, MAX_LENGTH, tempNode->fileName);
-    dirName = tc2s(tDirName);
-    tempNode = tempNode->parentDir;
-    tempNode->subDir->erase(dirName);       //从上级目录删除子目录
-    cout << "---目录已删除！" << endl;
-    printer.printStar();
-    log << "目录已删除！" << endl;
-    log << "-----------------" << endl;
+        /*处理无效输入*/
+    default:
+        cout << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        printer.printStar();
+        log << "---操作码\'" << commandPart[1][0] << "\'，无效的操作类型！" << endl;
+        log << "-----------------" << endl;
+        break;
+    }
 
     return;
 }
