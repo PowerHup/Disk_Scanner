@@ -499,14 +499,14 @@ void disk::scanAndBuild(const TCHAR* rootPath, string& sqlFileName)
                 newNode->subDir = nullptr;                                       //由于是文件，没有子目录，设为空指针
                 newNode->creationUTCTime = ft2t(findFileData.ftCreationTime);    //存储文件创建时间
                 newNode->fileSize = ((static_cast<ULONGLONG>(findFileData.nFileSizeHigh) << 32)) | findFileData.nFileSizeLow;    //存储文件大小
-                tempNode->subDir->insert(make_pair(tc2s(filePath), newNode));                            //将该节点存入亲代的子文件容器
+                tempNode->subDir->insert(make_pair(tc2s(filePath), newNode));    //将该节点存入亲代的子文件容器
                 /*写入SQL文件*/
                 judgeFile();
                 fout << "insert into FILES values(" << "\'" << tc2s(findFileData.cFileName) << "\',";
                 fout << "\'" << tc2s(filePath) << "\'," << "\'" << tc2s(path) << "\'," << to_string(newNode->fileSize) << ",";
                 fout << to_string(ft2t(findFileData.ftCreationTime));
                 fout << ");" << endl;
-                if (_tcslen(longestPath) < _tcslen(filePath))           //比较路径名长度，求最长全路径名
+                if (_tcslen(longestPath) < _tcslen(filePath))               //比较路径名长度，求最长全路径名
                     _tcscpy_s(longestPath, MAX_LENGTH, filePath);
                 while (FindNextFile(progStack.top(), &findFileData) == 0)   //返回值是FALSE，进行下一步判断
                 {
